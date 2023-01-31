@@ -1,0 +1,73 @@
+install jenkins
+
+security groups 8080
+
+cat /etc/passwd
+
+sudo visudo
+
+sudo systemctl restart sshd
+
+sudo su jenkins
+
+install terraform
+
+sudo apt install unzip -y
+
+install aws cli
+
+create a user in IAM 
+
+user should have adminstrator access
+
+
+
+
+
+aws configure
+
+secret key 
+access key
+
+pieline shd have access key and secret key
+
+
+
+
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+
+# Configure the AWS Provider
+provider "aws" {
+  region     = "us-east-1"
+  access_key = "AKIAYNOPDP4ZQTBF3QNJ"
+  secret_key = "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"
+}
+
+
+
+
+pipeline {
+    agent any
+    triggers {
+        pollSCM('* * * * *')
+    }
+    stages {
+        stage('vcs') {
+            steps {
+                git branch: 'master', url: 'https://github.com/vikasvarmadunna/pavan-taskvpc.git'
+            }
+        }
+        stage('create terraform infrastructre') {
+            steps {
+                sh 'terraform init && terraform apply -auto-approve'
+            }
+        }
+    }
+}
